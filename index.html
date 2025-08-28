@@ -617,7 +617,54 @@
     const db = getFirestore(app);
 
     console.log("✅ Firebase initialized");
+</script>
 
+<!-- ✨ Add the signup/login code here -->
+<script type="module">
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-auth.js";
+
+  const auth = getAuth();
+
+  // SIGN UP
+  document.getElementById("signupBtn").addEventListener("click", async () => {
+    const email = document.getElementById("suEmail").value;
+    const password = document.getElementById("suPass").value;
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      alert("✅ Account created: " + userCred.user.email);
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  });
+
+  // LOG IN
+  document.getElementById("loginBtn").addEventListener("click", async () => {
+    const email = document.getElementById("liEmail").value;
+    const password = document.getElementById("liPass").value;
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      alert("✅ Logged in: " + userCred.user.email);
+    } catch (err) {
+      alert("❌ " + err.message);
+    }
+  });
+
+  // LOG OUT
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    alert("👋 Logged out");
+  });
+
+  // Track state
+  onAuthStateChanged(auth, (user) => {
+    console.log(user ? "Logged in as " + user.email : "Not logged in");
+  });
   </script>
 </body>
 </html>
