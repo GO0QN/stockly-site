@@ -593,6 +593,31 @@
     document.getElementById('submitQuiz').onclick=submitQuiz;
     document.getElementById('resetQuiz').onclick=resetQuiz;
     renderQuiz();
+    
+      <!-- ✅ Firebase initialization -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-analytics.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-auth.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWQGLhMOcjkq2sL6gH3wMTvJx5_6uwSEA",
+      authDomain: "stockly-a46b2.firebaseapp.com",
+      projectId: "stockly-a46b2",
+      storageBucket: "stockly-a46b2.appspot.com",
+      messagingSenderId: "518502385497",
+      appId: "1:518502385497:web:485983ecaca0a978faae48",
+      measurementId: "G-99JP69WZQC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    console.log("✅ Firebase initialized");
+
   </script>
 </body>
 </html>
