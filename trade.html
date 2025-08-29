@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stockly • Paper Trade</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+</head><body>
+
+<!-- Header -->
+<!-- paste header.html block with nav -->
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html"><span class="logo"></span><span>Stockly</span></a>
+    <nav class="navlinks">
+      <a href="index.html" data-nav="home">Home</a>
+      <a href="learn.html" data-nav="learn">Learn</a>
+      <a href="quiz.html" data-nav="quiz">Quiz</a>
+      <a href="trade.html" data-nav="trade">Paper Trade</a>
+      <a href="forums.html" data-nav="forums">Forums</a>
+    </nav>
+    <div class="user">
+      <button class="user-btn" data-el="userBtn"><span data-el="userEmail">Guest</span> ▾</button>
+      <div class="user-menu card" data-el="userMenu">
+        <a href="account.html">Profile / Account</a>
+        <button data-el="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+<script>document.querySelector('[data-nav="trade"]').classList.add('active')</script>
+
+<section class="section" data-requires-auth>
+  <div class="container">
+    <div class="card">
+      <h2>Papers Trading Sandbox (shell)</h2>
+      <p class="muted">Account-gated. We’ll wire the simulator and options lab here.</p>
+      <a class="btn btn-primary" href="account.html">Go to Account</a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="container">© <span id="year"></span> Stockly</div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+
+<script type="module" src="firebase.js"></script>
+</body></html>
