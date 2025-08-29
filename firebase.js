@@ -1,7 +1,7 @@
 <script type="module">
-  // Shared Firebase across pages
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
   import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCWQGLhMOcjkq2sL6gH3wMTvJx5_6uwSEA",
@@ -12,11 +12,14 @@
     appId: "1:518502385497:web:485983ecaca0a978faae48"
   };
 
-  const app = initializeApp(firebaseConfig);
+  const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
-  window.__stockly = { app, auth };
+  const db   = getFirestore(app);
 
-  // Header user menu logic (works on every page that includes this file)
+  // Make available to pages
+  window.__stockly = { app, auth, db };
+
+  // Header controls (works on every page that includes this file)
   const emailSpan = document.querySelector('[data-el="userEmail"]');
   const userBtn   = document.querySelector('[data-el="userBtn"]');
   const userMenu  = document.querySelector('[data-el="userMenu"]');
