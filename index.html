@@ -1,282 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Stockly — Learn • Trade • Community</title>
-<meta name="description" content="Stockly: free, account-gated 84-day options course (30 Q/day), paper trading, options payoff lab, progress dashboard with XP & streaks, and community forums.">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-<style>
-:root{--spotify:#1DB954;--spotify2:#1ED760;--muted:#b3b3b3;--max:1120px}
-*{box-sizing:border-box}html,body{margin:0;background:#000;color:#fff;font:16px/1.55 Inter,system-ui}
-a{color:inherit}
-.nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.35));border-bottom:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px)}
-.nav-inner{max-width:var(--max);margin:0 auto;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.brand{display:flex;gap:.6rem;align-items:center;text-decoration:none;font-weight:800}
-.brand .logo{width:32px;height:32px;border-radius:8px;background:conic-gradient(from 0deg,var(--spotify),var(--spotify2));box-shadow:0 0 0 6px rgba(29,185,84,.12),0 0 40px rgba(29,185,84,.25)}
-.nav-links{display:flex;gap:.4rem;flex-wrap:wrap}
-.nav-links a{color:var(--muted);text-decoration:none;font-weight:700;padding:.35rem .6rem;border-radius:999px}
-.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.06)}
-.section{padding:64px 16px}.container{max-width:var(--max);margin:0 auto}
-.kicker{color:var(--spotify);text-transform:uppercase;letter-spacing:.12em;font-weight:800;font-size:.8rem}
-.h1{font-size:clamp(2rem,3.5vw + 1rem,3.5rem);line-height:1.1;margin:.25rem 0 1rem;font-weight:800}
-.lead{color:#e9e9e9;font-size:clamp(1.02rem,.6vw + 1rem,1.2rem);max-width:65ch}
-.hero-card,.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.grid{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
-.card{grid-column:span 12}
-.span-6{grid-column:span 6}.span-4{grid-column:span 4}
-@media(max-width:900px){.span-6,.span-4{grid-column:span 12}}
-.btn{border:0;border-radius:12px;padding:.6rem .9rem;font-weight:800;cursor:pointer}
-.btn-primary{background:linear-gradient(135deg,var(--spotify),var(--spotify2));color:#0b0b0b}
-.btn-ghost{background:#0d0d0d;border:1px solid rgba(255,255,255,.1);color:#fff}
-.input,.textarea,select{background:#0f0f0f;border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:10px;padding:.5rem;width:100%}
-.textarea{min-height:110px;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
-.muted{color:var(--muted)}
-.chart{width:100%;height:280px;background:#0d0d0d;border:1px solid rgba(255,255,255,.08);border-radius:12px}
-.locked{opacity:.55;filter:grayscale(1)}
-.overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:60}
-.overlay .panel{max-width:520px;background:#121212;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px}
-#toasts{position:fixed;right:12px;bottom:12px;display:flex;flex-direction:column;gap:8px;z-index:70}
-.toast{background:#121212;border:1px solid rgba(255,255,255,.1);border-left:4px solid var(--spotify);padding:10px 12px;border-radius:12px;min-width:240px}
-</style>
-</head>
-<body>
-<nav class="nav"><div class="nav-inner">
-  <a class="brand" href="#/"><span class="logo"></span><span>Stockly</span></a>
-  <div class="nav-links">
-    <a data-route="#/" class="active">Home</a>
-    <a data-route="#/dashboard">Dashboard</a>
-    <a data-route="#/course">Daily Course</a>
-    <a data-route="#/community">Community</a>
-    <a data-route="#/trade">Paper Trade</a>
-    <a data-route="#/options">Options Lab</a>
-    <a data-route="#/learn">Learn</a>
-    <a id="accountBtn" class="pill" data-route="#/account">Account</a>
-  </div>
-</div></nav>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head><body>
 
-<div id="authOverlay" class="overlay"><div class="panel">
-  <h3>Sign in required</h3>
-  <p class="muted">Create a free account to access this feature and sync your progress.</p>
-  <div class="flex">
-    <a class="btn btn-primary" href="#/account">Go to Account</a>
-    <button class="btn btn-ghost" id="overlayDismiss">Cancel</button>
-  </div>
-</div></div>
-<div id="toasts" aria-live="polite"></div>
-
-<header id="home" class="section hero" data-page="/">
-  <div class="container">
-    <div class="hero-card">
-      <div class="kicker">Hands-on • Free • Account-based</div>
-      <h1 class="h1">Learn by Doing — then Share What You Learn</h1>
-      <p class="lead">Unlock an 84-day options course (30 Q/day), a paper-trading simulator, an options payoff lab, and a progress dashboard. Join the community to post wins, lessons, and get feedback.</p>
-      <div class="flex"><a class="btn btn-primary" href="#/account">Create Free Account</a><a class="btn btn-ghost" href="#/dashboard">View Dashboard</a></div>
+<!-- Header (shared) -->
+<?!-- copy/paste the header.html block here -->
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html"><span class="logo"></span><span>Stockly</span></a>
+    <nav class="navlinks">
+      <a href="index.html" data-nav="home">Home</a>
+      <a href="learn.html" data-nav="learn">Learn</a>
+      <a href="quiz.html" data-nav="quiz">Quiz</a>
+      <a href="trade.html" data-nav="trade">Paper Trade</a>
+      <a href="forums.html" data-nav="forums">Forums</a>
+    </nav>
+    <div class="user">
+      <button class="user-btn" data-el="userBtn"><span data-el="userEmail">Guest</span> ▾</button>
+      <div class="user-menu card" data-el="userMenu">
+        <a href="account.html">Profile / Account</a>
+        <button data-el="logoutBtn">Log out</button>
+      </div>
     </div>
   </div>
 </header>
+<script>
+  const p='index.html'; document.querySelectorAll('[data-nav="home"]').forEach(a=>a.classList.add('active'));
+</script>
 
-<section id="dashboard" class="section" data-page="/dashboard" data-auth="required">
+<section class="hero section">
   <div class="container">
-    <div class="kicker">Your Progress</div>
     <div class="grid">
       <div class="card span-6">
-        <h3>Overview</h3>
-        <p class="mono">Streak: <span id="streak">0</span> days • XP: <span id="xp">0</span> • Level: <span id="level">1</span></p>
-        <div class="flex" id="badges"></div>
-        <small class="muted">Complete daily quizzes, trade practice, and lab tasks to earn XP. Keep a daily streak to unlock badges.</small>
-      </div>
-      <div class="card span-6">
-        <h3>Recent Activity</h3>
-        <ul id="activity" class="mono" style="padding-left:1rem"></ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="account" class="section" data-page="/account">
-  <div class="container">
-    <div class="kicker">Account</div>
-    <div class="grid">
-      <div class="card span-6">
-        <h3>Sign up / Log in</h3>
-        <div class="row">
-          <label>Email <input id="email" class="input" type="email" placeholder="you@example.com"></label>
-          <label>Password <input id="password" class="input" type="password" placeholder="min 6 chars"></label>
+        <div class="kicker">Hands-on • Free • Account-based</div>
+        <h1 class="h1">Learn Options by Doing — Then Share What You Learn</h1>
+        <p class="lead">Create a free account to unlock daily lessons and quizzes, a paper-trading sandbox, an options payoff lab, and a growing community.</p>
+        <div style="display:flex;gap:10px;margin-top:12px">
+          <a class="btn btn-primary" href="account.html">Create Free Account</a>
+          <a class="btn btn-ghost" href="learn.html">Browse Lessons</a>
         </div>
-        <div class="flex">
-          <button class="btn btn-primary" id="signup">Create account</button>
-          <button class="btn btn-ghost" id="login">Log in</button>
-          <button class="btn btn-ghost" id="logout">Log out</button>
-          <small id="authStatus" class="mono"></small>
-        </div>
+        <small class="muted" style="display:block;margin-top:10px">For education only. Not investment advice.</small>
       </div>
-      <div class="card span-6">
-        <h3>Profile</h3>
-        <div class="flex" style="align-items:flex-start">
-          <img id="avatarPreview" src="https://i.pravatar.cc/150?img=12" alt="avatar" style="width:72px;height:72px;border-radius:50%;border:2px solid rgba(255,255,255,.2);object-fit:cover;cursor:pointer" title="Click to upload…">
-          <div style="flex:1">
-            <div class="row">
-              <label>Display Name <input id="displayName" class="input" placeholder="TraderJane"></label>
-              <label>Avatar URL <input id="avatarUrl" class="input" placeholder="https://..."></label>
-            </div>
-            <div class="row">
-              <label>Bio <input id="bio" class="input" placeholder="Day trading learner, options-curious"></label>
-              <label>Goal <input id="goal" class="input" placeholder="Master spreads in 6 weeks"></label>
-            </div>
-            <div class="row">
-              <label>Risk per Trade (%) <input id="riskPct" class="input" type="number" value="1"></label>
-              <label>Theme
-                <select id="theme" class="input">
-                  <option value="spotify">Spotify Dark</option>
-                  <option value="system">System</option>
-                </select>
-              </label>
-            </div>
-            <div class="flex"><button class="btn btn-primary" id="saveProfile">Save Profile</button><small id="profileStatus" class="mono"></small></div>
-          </div>
+      <div class="span-6">
+        <div class="card">
+          <h3>What you’ll get</h3>
+          <ul>
+            <li>Account-gated progress with streaks & XP</li>
+            <li>Daily quizzes (30 Q / day) — scaffolded</li>
+            <li>Paper trading simulator (coming online)</li>
+            <li>Options payoff lab (coming online)</li>
+            <li>Community forums (coming online)</li>
+          </ul>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3>Roadmap</h3>
+          <p class="muted">We’re shipping the full 12-week course, simulator, and forums in phases. Your account keeps progress synced.</p>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section id="course" class="section" data-page="/course" data-auth="required">
-  <div class="container">
-    <div class="kicker">84-Day Course</div>
-    <p class="muted">Unlocks one day every 24 hours from your start date. Each day has a 30-question quiz.</p>
-    <div class="flex"><button class="btn btn-primary" id="startCourse">Set/Reset Start Date</button><span class="mono">Course start: <span id="courseStart">not set</span> • Today index: <span id="dayIndex">–</span>/84</span></div>
-    <div id="dayGrid" class="grid" style="margin-top:12px"></div>
-    <div id="dayDetail" class="card" style="margin-top:16px"></div>
-  </div>
-</section>
+<footer><div class="container">© <span id="year"></span> Stockly • Education only</div></footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
 
-<section id="community" class="section" data-page="/community" data-auth="required">
-  <div class="container">
-    <div class="kicker">Community</div>
-    <div class="grid">
-      <div class="card span-6">
-        <h3>Create Post</h3>
-        <div class="row">
-          <label>Title <input id="postTitle" class="input" placeholder="My ORB scalp on NVDA"></label>
-          <label>Tag
-            <select id="postTag" class="input"><option>Wins</option><option>Setups</option><option>Lessons</option><option>Questions</option></select>
-          </label>
-        </div>
-        <label>Content <textarea id="postBody" class="textarea" placeholder="What did you see? Entry/exit, risk, emotions, takeaway… (educational only)"></textarea></label>
-        <div class="flex"><button class="btn btn-ghost" id="postImageBtn">Attach Image</button><small id="postImageName" class="mono"></small></div>
-        <div class="flex" style="margin-top:8px"><button class="btn btn-primary" id="publishPost">Publish</button><small class="muted">No signals or financial advice. Blur account numbers.</small></div>
-      </div>
-      <div class="card span-6">
-        <h3>Feed</h3>
-        <div class="flex" style="justify-content:space-between"><div class="flex"><span class="pill">All</span><span class="pill">Wins</span><span class="pill">Setups</span><span class="pill">Lessons</span><span class="pill">Questions</span></div><button class="btn btn-ghost" id="refreshFeed">Refresh</button></div>
-        <div id="feed"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="trade" class="section" data-page="/trade" data-auth="required">
-  <div class="container">
-    <div class="kicker">Candlestick Simulator + Paper Trading</div>
-    <div class="grid">
-      <div class="card span-6">
-        <h3>Candlesticks</h3>
-        <div class="row"><label>Start Price <input id="cs_start" class="input" type="number" value="100"></label><label>Volatility (0.1–3) <input id="cs_vol" class="input" type="number" value="1.2" step="0.1"></label></div>
-        <div class="flex"><button class="btn btn-primary" id="cs_startBtn">Start</button><button class="btn btn-ghost" id="cs_stopBtn">Stop</button></div>
-        <canvas id="cs_chart" class="chart" width="800" height="280" aria-label="Candlestick chart"></canvas>
-      </div>
-      <div class="card span-6">
-        <h3>Paper Trading</h3>
-        <div class="row"><label>Qty <input id="pt_qty" class="input" type="number" value="10"></label><label>Account ($) <input id="pt_cash" class="input" type="number" value="10000"></label></div>
-        <div class="flex"><button class="btn btn-primary" id="pt_buy">Buy @ Market</button><button class="btn btn-ghost" id="pt_sell">Sell @ Market</button><button class="btn btn-ghost" id="pt_flat">Close Position</button></div>
-        <p class="mono">Price: $<span id="pt_price">–</span> | Pos: <span id="pt_pos">0</span> sh | Avg: $<span id="pt_avg">0</span></p>
-        <p class="mono">Cash: $<span id="pt_cashVal">0</span> | UPL: <span id="pt_upl">0</span> | RPL: <span id="pt_rpl">0</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="options" class="section" data-page="/options" data-auth="required">
-  <div class="container">
-    <div class="kicker">Options Payoff Lab</div>
-    <div class="grid">
-      <div class="card span-6">
-        <h3>Setup</h3>
-        <div class="row"><label>Type
-          <select id="optType" class="input">
-            <option value="call">Long Call (debit)</option>
-            <option value="put">Long Put (debit)</option>
-            <option value="short_call">Short Call (credit)</option>
-            <option value="short_put">Short Put (credit)</option>
-            <option value="bull_call">Bull Call Spread</option>
-            <option value="bear_put">Bear Put Spread</option>
-          </select></label>
-          <label>Underlying Price <input id="uPrice" class="input" type="number" value="100"></label></div>
-        <div class="row"><label>Strike A <input id="k1" class="input" type="number" value="100"></label><label>Strike B <input id="k2" class="input" type="number" value="110"></label></div>
-        <div class="row"><label>Premium A <input id="p1" class="input" type="number" value="3"></label><label>Premium B <input id="p2" class="input" type="number" value="1"></label></div>
-        <div class="row"><label>Contracts <input id="contracts" class="input" type="number" value="1"></label><label>Multiplier <input id="mult" class="input" type="number" value="100"></label></div>
-        <div class="flex"><button class="btn btn-primary" id="drawPayoff">Draw Payoff</button><small>Intrinsic payoff at expiration (no time value).</small></div>
-      </div>
-      <div class="card span-6">
-        <h3>Payoff</h3>
-        <canvas id="payoffChart" class="chart" width="800" height="280" aria-label="Payoff chart"></canvas>
-        <p class="mono">Max Profit: <span id="maxProfit">–</span> | Max Loss: <span id="maxLoss">–</span> | Breakeven(s): <span id="breakevens">–</span></p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="learn" class="section" data-page="/learn">
-  <div class="container">
-    <div class="kicker">Video Library</div>
-    <div id="videoGrid" class="grid"></div>
-  </div>
-</section>
-
-<footer class="section" style="padding-top:20px"><div class="container"><small>For education only. Not investment advice. © <span id="year"></span> Stockly.</small></div></footer>
-
-<!-- Everything in one module (Firebase + app logic) -->
-<script type="module">
-/* Firebase SDKs */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, limit, getDocs, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-storage.js";
-
-/* --- Your Firebase project (from console) --- */
-const firebaseConfig = {
-  apiKey: "AIzaSyCWQGLhMOcjkq2sL6gH3wMTvJx5_6uwSEA",
-  authDomain: "stockly-a46b2.firebaseapp.com",
-  projectId: "stockly-a46b2",
-  storageBucket: "stockly-a46b2.appspot.com",
-  messagingSenderId: "518502385497",
-  appId: "1:518502385497:web:485983ecaca0a978faae48"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-/* ------------ Router + helpers ------------ */
-document.getElementById('year').textContent = new Date().getFullYear();
-const routes={ "/":["home"], "/dashboard":["dashboard"], "/course":["course"], "/community":["community"], "/trade":["trade"], "/options":["options"], "/learn":["learn"], "/account":["account"] };
-function setActiveLink(hash){ document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active')); const link=document.querySelector(`.nav-links a[data-route="${hash}"]`); if(link) link.classList.add('active'); }
-function toast(msg){ const wrap=document.getElementById('toasts'); const el=document.createElement('div'); el.className="toast"; el.textContent=msg; wrap.appendChild(el); setTimeout(()=>{ el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, 2200); }
-function checkAuthFor(path){ const sec=document.querySelector(`[data-page="${path}"]`); if(!sec) return true; if(sec.hasAttribute('data-auth') && !window.__authed){ document.getElementById('authOverlay').style.display='flex'; return false; } return true; }
-function show(path){ const ok=checkAuthFor(path); const target=ok?path:"/"; document.querySelectorAll('[data-page]').forEach(sec=>{ const p=sec.getAttribute('data-page').replace('/',''); sec.style.display=(routes[target]||[]).includes(p)?'block':'none'; }); setActiveLink("#"+target); window.scrollTo({top:0,behavior:'smooth'}); if(target==="/community") loadFeed(); }
-window.addEventListener('hashchange', ()=>{ const p=(location.hash||"#/").replace('#',''); show(p); });
-document.querySelectorAll('[data-route]').forEach(a=>a.addEventListener('click', e=>{ e.preventDefault(); location.hash=a.getAttribute('data-route'); }));
-if(!location.hash) location.hash="#/"; show(location.hash.replace('#',''));
-document.getElementById('overlayDismiss').onclick=()=>{ document.getElementById('authOverlay').style.display='none'; };
-
-/* ------------ Dashboard ------------ */
-const progress = JSON.parse(localStorage.getItem('stockly_progress')||'{}');
-if(progress.xp==null) Object.assign(progress,{xp:0,level:1,streak:0,lastDay:0,badges:[],activity:[]});
-function saveProgress(){ localStorage.setItem('stockly_progress', JSON.stringify(progress)); }
-function renderDashboard(){ const s=document.getElementById('streak'); if(!s) return; s.textContent=progress.streak; document.getElementById('xp').textContent=progress.xp; document.getElementById('level').textContent=progress.level; const b=document.getElementById('badges'); b.innerHTML=""; progress.badges.forEach(x=>{ const span=document.createElement('span'); span.className='pill'; span.textContent=x; b.appendChild(span); }); const ul=document.getElementById('activity'); ul.innerHTML=""; progress.activity.forEach(a=>{ const li=document.createElement('li'); li.textContent=new Date(a.t).toLocaleString()+" — "+a.label; ul.appendChild(li); }); }
-function addXP(n,label){ progress.xp+=n; progress.level=Math.floor(progress.xp/500)+1; if(label){ progress.activity.unshift({t:Date.now(),label:`+${n} XP — ${label}`}); if(progress.activity.length>20) progress.activity.pop(); } saveProgress(); renderDashboard(); toast(`+${n} XP — ${label||"Nice!"}`); }
-function bumpStreak(){ const today=Math.floor(Date.now()/(24*3600*1000)); if(progress.lastDay!==
+<!-- Firebase (shared across pages) -->
+<script type="module" src="firebase.js"></script>
+</body></html>
