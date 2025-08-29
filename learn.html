@@ -1,63 +1,105 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Stockly • Learn</title>
-<link rel="stylesheet" href="styles.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-</head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stockly • Learn</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
 
-<!-- Header -->
-<!-- paste header.html block -->
-<header class="site-header">
-  <div class="container nav">
-    <a class="brand" href="index.html"><span class="logo"></span><span>Stockly</span></a>
-    <nav class="navlinks">
-      <a href="index.html" data-nav="home">Home</a>
-      <a href="learn.html" data-nav="learn">Learn</a>
-      <a href="quiz.html" data-nav="quiz">Quiz</a>
-      <a href="trade.html" data-nav="trade">Paper Trade</a>
-      <a href="forums.html" data-nav="forums">Forums</a>
-    </nav>
-    <div class="user">
-      <button class="user-btn" data-el="userBtn"><span data-el="userEmail">Guest</span> ▾</button>
-      <div class="user-menu card" data-el="userMenu">
-        <a href="account.html">Profile / Account</a>
-        <button data-el="logoutBtn">Log out</button>
+  <!-- Header (same on all pages) -->
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html"><span class="logo"></span><span>Stockly</span></a>
+      <nav class="navlinks">
+        <a href="index.html" data-nav="home">Home</a>
+        <a href="learn.html" data-nav="learn">Learn</a>
+        <a href="quiz.html" data-nav="quiz">Quiz</a>
+        <a href="trade.html" data-nav="trade">Paper Trade</a>
+        <a href="forums.html" data-nav="forums">Forums</a>
+      </nav>
+      <div class="user">
+        <button class="user-btn" data-el="userBtn"><span data-el="userEmail">Guest</span> ▾</button>
+        <div class="user-menu card" data-el="userMenu">
+          <a href="account.html">Profile / Account</a>
+          <button data-el="logoutBtn">Log out</button>
+        </div>
       </div>
     </div>
-  </div>
-</header>
-<script>document.querySelector('[data-nav="learn"]').classList.add('active')</script>
+  </header>
+  <script>document.querySelector('[data-nav="learn"]').classList.add('active');</script>
 
-<section class="section">
-  <div class="container">
-    <div class="card">
-      <h2>Learn — Video Library (scaffold)</h2>
-      <p class="muted">We’ll load a larger playlist later. For now this is a placeholder.</p>
-      <div class="grid" id="videos"></div>
+  <!-- Page content -->
+  <section class="section">
+    <div class="container">
+      <div class="grid">
+        <div class="card span-12">
+          <h2>Learn — Video Library</h2>
+          <p class="muted">This list is driven by your Firestore collection <code>videos</code>. Add docs with fields:
+            <code>t</code> (title), <code>id</code> (YouTube ID), <code>src</code> (source), and <code>order</code> (number).
+          </p>
+        </div>
+        <div id="videos" class="span-12 grid"></div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer><div class="container">© <span id="year"></span> Stockly</div></footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+  <footer>
+    <div class="container">© <span id="year"></span> Stockly</div>
+  </footer>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 
-<script>
-  const vids = [
-    {t:"American Call Options", id:"nnl3x1wo25g", src:"Khan Academy"},
-    {t:"American Put Options", id:"6CUcgUeQS-w", src:"Khan Academy"},
-    {t:"VWAP Strategy", id:"wVof35ErhEY", src:"TradeIQ"},
-    {t:"Candlestick Patterns", id:"_I1omSmy44Q", src:"Rayner Teo"}
-  ];
-  const grid = document.getElementById('videos');
-  vids.forEach(v=>{
-    const el = document.createElement('article'); el.className="card span-6";
-    el.innerHTML = `<h3>${v.t}</h3>
-      <div style="height:320px;border-radius:12px;overflow:hidden">
-        <iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/${v.id}" title="${v.t}" style="border:0" allowfullscreen></iframe>
-      </div><small class="muted">Source: ${v.src}</small>`;
-    grid.appendChild(el);
-  });
-</script>
+  <!-- Firestore-powered video list (free Spark plan, no Storage needed) -->
+  <script type="module">
+    import "./firebase.js"; // initializes app, auth, header behavior
+    import {
+      getFirestore, collection, query, orderBy, onSnapshot
+    } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
 
-<script type="module" src="firebase.js"></script>
-</body></html>
+    const { db } = window.__stockly;
+    const grid = document.getElementById('videos');
+
+    // Live data from Firestore: collection "videos"
+    const q = query(collection(db, "videos"), orderBy("order", "asc"));
+    onSnapshot(q, (snap) => {
+      grid.innerHTML = "";
+      if (snap.empty) {
+        // Fallback defaults if you haven't added any docs yet
+        const defaults = [
+          { t: "American Call Options", id: "nnl3x1wo25g", src: "Khan Academy" },
+          { t: "American Put Options",  id: "6CUcgUeQS-w",  src: "Khan Academy" },
+          { t: "VWAP Strategy",         id: "wVof35ErhEY",  src: "TradeIQ" },
+          { t: "Candlestick Patterns",  id: "_I1omSmy44Q",  src: "Rayner Teo" }
+        ];
+        defaults.forEach(renderCard);
+        return;
+      }
+      snap.forEach(doc => renderCard(doc.data()));
+    });
+
+    function renderCard(v) {
+      const el = document.createElement('article');
+      el.className = "card span-6";
+      el.innerHTML = `
+        <h3>${escapeHtml(v.t || "Untitled")}</h3>
+        <div style="height:320px;border-radius:12px;overflow:hidden">
+          <iframe
+            width="100%" height="100%"
+            src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id || "")}"
+            title="${escapeHtml(v.t || "Video")}"
+            style="border:0" allowfullscreen></iframe>
+        </div>
+        <small class="muted">Source: ${escapeHtml(v.src || "YouTube")}</small>
+      `;
+      grid.appendChild(el);
+    }
+
+    function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
+  </script>
+
+  <!-- Shared Firebase footer script (auth header, gating, etc.) -->
+  <script type="module" src="firebase.js"></script>
+</body>
+</html>
