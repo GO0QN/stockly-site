@@ -1,591 +1,282 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stockly — Day Trading & Options Learning Platform</title>
-  <meta name="description" content="Stockly: learn day trading & options with a candlestick simulator, paper trading sandbox, options payoff lab, 30-question quiz, and curated videos." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{ --spotify:#1DB954; --spotify-2:#1ed760; --bg:#000; --text:#fff; --muted:#b3b3b3; --ring: rgba(29,185,84,.5); --card-shadow:0 10px 30px rgba(0,0,0,.5); --radius:16px; --radius-sm:12px; --radius-lg:22px; --maxw:1140px; --red:#f05; }
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:radial-gradient(1200px 600px at 10% -10%, rgba(29,185,84,.08),transparent 60%),radial-gradient(900px 500px at 90% -20%, rgba(30,215,96,.07),transparent 60%),#000;color:#fff;font:16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,sans-serif;scroll-behavior:smooth}
-    .nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(130%) blur(10px);background:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.35));border-bottom:1px solid rgba(255,255,255,.05)}
-    .nav-inner{max-width:var(--maxw);margin:0 auto;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-    .brand{display:inline-flex;align-items:center;gap:.65rem;text-decoration:none;color:#fff;font-weight:800;letter-spacing:.2px}
-    .brand .logo{width:32px;height:32px;border-radius:8px;background:conic-gradient(from 0deg, var(--spotify), var(--spotify-2));display:grid;place-items:center;box-shadow:0 0 0 6px rgba(29,185,84,.12),0 0 40px rgba(29,185,84,.25)}
-    .nav-links{display:flex;gap:1rem;align-items:center;flex-wrap:wrap}
-    .nav-links a{color:var(--muted);text-decoration:none;font-weight:600;padding:.35rem .6rem;border-radius:999px;cursor:pointer}
-    .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.06);outline:none}
-    .cta{display:inline-flex;align-items:center;gap:.6rem;padding:.55rem .9rem;border-radius:999px;background:linear-gradient(135deg,var(--spotify),var(--spotify-2));color:#0b0b0b;text-decoration:none;font-weight:800;box-shadow:0 10px 20px rgba(29,185,84,.35),inset 0 -2px 0 rgba(0,0,0,.25)}
-    .section{padding:64px 16px}.container{max-width:var(--maxw);margin:0 auto}
-    .kicker{color:var(--spotify);text-transform:uppercase;letter-spacing:.14em;font-weight:800;font-size:.8rem}
-    .h1{font-size:clamp(2rem,3.6vw + 1rem,3.5rem);line-height:1.1;margin:.25rem 0 1rem;font-weight:800}
-    .lead{color:#e9e9e9;font-size:clamp(1.05rem,.6vw + 1rem,1.25rem);max-width:60ch;margin:0 0 1.25rem}
-    .hero{position:relative;overflow:hidden;padding-top:72px}
-    .hero-card{background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-lg);padding:32px;backdrop-filter:blur(8px);box-shadow:var(--card-shadow)}
-    .grid{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
-    .card{grid-column:span 12;background:linear-gradient(180deg,#1a1a1a,#121212);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:20px;box-shadow:var(--card-shadow)}
-    .card h3{margin:.25rem 0 .35rem;font-size:1.1rem}.card p{color:var(--muted);margin:0}
-    @media(min-width:700px){.span-4{grid-column:span 4}.span-6{grid-column:span 6}.span-8{grid-column:span 8}}
-    .muted{color:var(--muted)} .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
-    .route-hidden{display:none!important}
-    input,select,button{font:inherit}
-    .input{background:#0f0f0f;border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:10px;padding:.5rem .6rem;width:100%}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .btn{border:0;border-radius:10px;padding:.55rem .8rem;font-weight:800;cursor:pointer}
-    .btn-primary{background:linear-gradient(135deg,var(--spotify),var(--spotify-2));color:#0b0b0b}
-    .btn-ghost{background:#0d0d0d;border:1px solid rgba(255,255,255,.1);color:#fff}
-    .flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .chart{width:100%;height:280px;background:#0d0d0d;border:1px solid rgba(255,255,255,.08);border-radius:12px;display:block}
-    small{color:var(--muted)}
-    .pill{display:inline-flex;align-items:center;gap:.35rem;background:#0d0d0d;border:1px solid rgba(255,255,255,.06);padding:.3rem .6rem;border-radius:999px;color:#eaeaea}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Stockly — Learn • Trade • Community</title>
+<meta name="description" content="Stockly: free, account-gated 84-day options course (30 Q/day), paper trading, options payoff lab, progress dashboard with XP & streaks, and community forums.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+<style>
+:root{--spotify:#1DB954;--spotify2:#1ED760;--muted:#b3b3b3;--max:1120px}
+*{box-sizing:border-box}html,body{margin:0;background:#000;color:#fff;font:16px/1.55 Inter,system-ui}
+a{color:inherit}
+.nav{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(0,0,0,.75),rgba(0,0,0,.35));border-bottom:1px solid rgba(255,255,255,.06);backdrop-filter:blur(8px)}
+.nav-inner{max-width:var(--max);margin:0 auto;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.brand{display:flex;gap:.6rem;align-items:center;text-decoration:none;font-weight:800}
+.brand .logo{width:32px;height:32px;border-radius:8px;background:conic-gradient(from 0deg,var(--spotify),var(--spotify2));box-shadow:0 0 0 6px rgba(29,185,84,.12),0 0 40px rgba(29,185,84,.25)}
+.nav-links{display:flex;gap:.4rem;flex-wrap:wrap}
+.nav-links a{color:var(--muted);text-decoration:none;font-weight:700;padding:.35rem .6rem;border-radius:999px}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,.06)}
+.section{padding:64px 16px}.container{max-width:var(--max);margin:0 auto}
+.kicker{color:var(--spotify);text-transform:uppercase;letter-spacing:.12em;font-weight:800;font-size:.8rem}
+.h1{font-size:clamp(2rem,3.5vw + 1rem,3.5rem);line-height:1.1;margin:.25rem 0 1rem;font-weight:800}
+.lead{color:#e9e9e9;font-size:clamp(1.02rem,.6vw + 1rem,1.2rem);max-width:65ch}
+.hero-card,.card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(12,minmax(0,1fr))}
+.card{grid-column:span 12}
+.span-6{grid-column:span 6}.span-4{grid-column:span 4}
+@media(max-width:900px){.span-6,.span-4{grid-column:span 12}}
+.btn{border:0;border-radius:12px;padding:.6rem .9rem;font-weight:800;cursor:pointer}
+.btn-primary{background:linear-gradient(135deg,var(--spotify),var(--spotify2));color:#0b0b0b}
+.btn-ghost{background:#0d0d0d;border:1px solid rgba(255,255,255,.1);color:#fff}
+.input,.textarea,select{background:#0f0f0f;border:1px solid rgba(255,255,255,.1);color:#fff;border-radius:10px;padding:.5rem;width:100%}
+.textarea{min-height:110px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.flex{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.muted{color:var(--muted)}
+.chart{width:100%;height:280px;background:#0d0d0d;border:1px solid rgba(255,255,255,.08);border-radius:12px}
+.locked{opacity:.55;filter:grayscale(1)}
+.overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:60}
+.overlay .panel{max-width:520px;background:#121212;border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px}
+#toasts{position:fixed;right:12px;bottom:12px;display:flex;flex-direction:column;gap:8px;z-index:70}
+.toast{background:#121212;border:1px solid rgba(255,255,255,.1);border-left:4px solid var(--spotify);padding:10px 12px;border-radius:12px;min-width:240px}
+</style>
 </head>
 <body>
-  <nav class="nav" aria-label="Primary">
-    <div class="nav-inner">
-      <a class="brand" href="#/">
-        <span class="logo" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1DB954"/><stop offset="100%" stop-color="#1ED760"/></linearGradient></defs>
-            <rect x="4" y="4" width="56" height="56" rx="12" fill="url(#g)"/>
-            <rect x="24" y="18" width="6" height="28" rx="1" fill="#0b0b0b"/>
-            <rect x="36" y="14" width="6" height="32" rx="1" fill="#0b0b0b" opacity=".85"/>
-          </svg>
-        </span>
-        <span>Stockly</span>
-      </a>
-      <div class="nav-links" role="navigation">
-        <a data-route="#/" class="active">Home</a>
-        <a data-route="#/learn">Learn</a>
-        <a data-route="#/trade">Paper Trade</a>
-        <a data-route="#/options">Options Lab</a>
-        <a data-route="#/quiz">Quiz (30)</a>
-        <a id="accountBtn" class="pill" data-route="#/account">Account</a>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="#/"><span class="logo"></span><span>Stockly</span></a>
+  <div class="nav-links">
+    <a data-route="#/" class="active">Home</a>
+    <a data-route="#/dashboard">Dashboard</a>
+    <a data-route="#/course">Daily Course</a>
+    <a data-route="#/community">Community</a>
+    <a data-route="#/trade">Paper Trade</a>
+    <a data-route="#/options">Options Lab</a>
+    <a data-route="#/learn">Learn</a>
+    <a id="accountBtn" class="pill" data-route="#/account">Account</a>
+  </div>
+</div></nav>
+
+<div id="authOverlay" class="overlay"><div class="panel">
+  <h3>Sign in required</h3>
+  <p class="muted">Create a free account to access this feature and sync your progress.</p>
+  <div class="flex">
+    <a class="btn btn-primary" href="#/account">Go to Account</a>
+    <button class="btn btn-ghost" id="overlayDismiss">Cancel</button>
+  </div>
+</div></div>
+<div id="toasts" aria-live="polite"></div>
+
+<header id="home" class="section hero" data-page="/">
+  <div class="container">
+    <div class="hero-card">
+      <div class="kicker">Hands-on • Free • Account-based</div>
+      <h1 class="h1">Learn by Doing — then Share What You Learn</h1>
+      <p class="lead">Unlock an 84-day options course (30 Q/day), a paper-trading simulator, an options payoff lab, and a progress dashboard. Join the community to post wins, lessons, and get feedback.</p>
+      <div class="flex"><a class="btn btn-primary" href="#/account">Create Free Account</a><a class="btn btn-ghost" href="#/dashboard">View Dashboard</a></div>
+    </div>
+  </div>
+</header>
+
+<section id="dashboard" class="section" data-page="/dashboard" data-auth="required">
+  <div class="container">
+    <div class="kicker">Your Progress</div>
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Overview</h3>
+        <p class="mono">Streak: <span id="streak">0</span> days • XP: <span id="xp">0</span> • Level: <span id="level">1</span></p>
+        <div class="flex" id="badges"></div>
+        <small class="muted">Complete daily quizzes, trade practice, and lab tasks to earn XP. Keep a daily streak to unlock badges.</small>
+      </div>
+      <div class="card span-6">
+        <h3>Recent Activity</h3>
+        <ul id="activity" class="mono" style="padding-left:1rem"></ul>
       </div>
     </div>
-  </nav>
+  </div>
+</section>
 
-  <header id="home" class="section hero" role="banner" data-page="/">
-    <div class="container">
-      <div class="hero-card">
-        <div class="kicker">Hands-on, Free, Account-based</div>
-        <h1 class="h1">Stockly: Learn by Doing—Live Simulators + Deep Course</h1>
-        <p class="lead">Create a free account with email to save progress. Practice with a live candlestick simulator, paper trading, full options payoff lab, and a 30-question quiz. Watch curated videos for each concept.</p>
+<section id="account" class="section" data-page="/account">
+  <div class="container">
+    <div class="kicker">Account</div>
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Sign up / Log in</h3>
+        <div class="row">
+          <label>Email <input id="email" class="input" type="email" placeholder="you@example.com"></label>
+          <label>Password <input id="password" class="input" type="password" placeholder="min 6 chars"></label>
+        </div>
         <div class="flex">
-          <a class="cta" href="#/account">Create Free Account</a>
-          <a class="cta" style="background:transparent;border:1px solid rgba(255,255,255,.1);color:#fff" href="#/learn">Open Video Library</a>
+          <button class="btn btn-primary" id="signup">Create account</button>
+          <button class="btn btn-ghost" id="login">Log in</button>
+          <button class="btn btn-ghost" id="logout">Log out</button>
+          <small id="authStatus" class="mono"></small>
+        </div>
+      </div>
+      <div class="card span-6">
+        <h3>Profile</h3>
+        <div class="flex" style="align-items:flex-start">
+          <img id="avatarPreview" src="https://i.pravatar.cc/150?img=12" alt="avatar" style="width:72px;height:72px;border-radius:50%;border:2px solid rgba(255,255,255,.2);object-fit:cover;cursor:pointer" title="Click to upload…">
+          <div style="flex:1">
+            <div class="row">
+              <label>Display Name <input id="displayName" class="input" placeholder="TraderJane"></label>
+              <label>Avatar URL <input id="avatarUrl" class="input" placeholder="https://..."></label>
+            </div>
+            <div class="row">
+              <label>Bio <input id="bio" class="input" placeholder="Day trading learner, options-curious"></label>
+              <label>Goal <input id="goal" class="input" placeholder="Master spreads in 6 weeks"></label>
+            </div>
+            <div class="row">
+              <label>Risk per Trade (%) <input id="riskPct" class="input" type="number" value="1"></label>
+              <label>Theme
+                <select id="theme" class="input">
+                  <option value="spotify">Spotify Dark</option>
+                  <option value="system">System</option>
+                </select>
+              </label>
+            </div>
+            <div class="flex"><button class="btn btn-primary" id="saveProfile">Save Profile</button><small id="profileStatus" class="mono"></small></div>
+          </div>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</section>
 
-  <!-- ACCOUNT -->
-  <section id="account" class="section" data-page="/account">
-    <div class="container">
-      <div class="kicker">Account</div>
-      <div class="grid">
-        <div class="card span-6">
-          <h3>Sign up</h3>
-          <div class="row">
-            <label>Email <input id="suEmail" class="input" type="email" placeholder="you@example.com" /></label>
-            <label>Password <input id="suPass" class="input" type="password" placeholder="min 6 chars" /></label>
-          </div>
-          <div class="flex">
-            <button class="btn btn-primary" id="signupBtn">Create account</button>
-            <small id="suStatus" class="mono"></small>
-          </div>
-          <small>By signing up you agree this platform is for education only and not financial advice.</small>
+<section id="course" class="section" data-page="/course" data-auth="required">
+  <div class="container">
+    <div class="kicker">84-Day Course</div>
+    <p class="muted">Unlocks one day every 24 hours from your start date. Each day has a 30-question quiz.</p>
+    <div class="flex"><button class="btn btn-primary" id="startCourse">Set/Reset Start Date</button><span class="mono">Course start: <span id="courseStart">not set</span> • Today index: <span id="dayIndex">–</span>/84</span></div>
+    <div id="dayGrid" class="grid" style="margin-top:12px"></div>
+    <div id="dayDetail" class="card" style="margin-top:16px"></div>
+  </div>
+</section>
+
+<section id="community" class="section" data-page="/community" data-auth="required">
+  <div class="container">
+    <div class="kicker">Community</div>
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Create Post</h3>
+        <div class="row">
+          <label>Title <input id="postTitle" class="input" placeholder="My ORB scalp on NVDA"></label>
+          <label>Tag
+            <select id="postTag" class="input"><option>Wins</option><option>Setups</option><option>Lessons</option><option>Questions</option></select>
+          </label>
         </div>
-        <div class="card span-6">
-          <h3>Log in</h3>
-          <div class="row">
-            <label>Email <input id="liEmail" class="input" type="email" /></label>
-            <label>Password <input id="liPass" class="input" type="password" /></label>
-          </div>
-          <div class="flex">
-            <button class="btn btn-ghost" id="loginBtn">Log in</button>
-            <button class="btn btn-ghost" id="logoutBtn">Log out</button>
-            <small id="liStatus" class="mono"></small>
-          </div>
-          <p class="mono">Current user: <span id="userInfo">none</span></p>
-        </div>
+        <label>Content <textarea id="postBody" class="textarea" placeholder="What did you see? Entry/exit, risk, emotions, takeaway… (educational only)"></textarea></label>
+        <div class="flex"><button class="btn btn-ghost" id="postImageBtn">Attach Image</button><small id="postImageName" class="mono"></small></div>
+        <div class="flex" style="margin-top:8px"><button class="btn btn-primary" id="publishPost">Publish</button><small class="muted">No signals or financial advice. Blur account numbers.</small></div>
+      </div>
+      <div class="card span-6">
+        <h3>Feed</h3>
+        <div class="flex" style="justify-content:space-between"><div class="flex"><span class="pill">All</span><span class="pill">Wins</span><span class="pill">Setups</span><span class="pill">Lessons</span><span class="pill">Questions</span></div><button class="btn btn-ghost" id="refreshFeed">Refresh</button></div>
+        <div id="feed"></div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- LEARN (videos) -->
-  <section id="learn" class="section" data-page="/learn">
-    <div class="container">
-      <div class="kicker">Video Library</div>
-      <p class="muted">Curated videos on options foundations, Greeks, VWAP, and candlesticks.</p>
-      <div id="videoGrid" class="grid"></div>
-    </div>
-  </section>
-
-  <!-- TRADE: candlesticks + sandbox -->
-  <section id="trade" class="section" data-page="/trade">
-    <div class="container">
-      <div class="kicker">Live Candlestick Simulator + Paper Trading</div>
-      <div class="grid">
-        <div class="card span-6">
-          <h3>Candlesticks</h3>
-          <div class="row">
-            <label>Start Price <input id="cs_start" class="input" type="number" value="100" /></label>
-            <label>Volatility (0.1–3) <input id="cs_vol" class="input" type="number" value="1.2" step="0.1"/></label>
-          </div>
-          <div class="flex">
-            <button class="btn btn-primary" id="cs_startBtn">Start</button>
-            <button class="btn btn-ghost" id="cs_stopBtn">Stop</button>
-            <small>Produces OHLC bars every second via random walk.</small>
-          </div>
-          <canvas id="cs_chart" class="chart" width="800" height="280" aria-label="Candlestick chart"></canvas>
-        </div>
-        <div class="card span-6">
-          <h3>Paper Trading</h3>
-          <div class="row">
-            <label>Qty <input id="pt_qty" class="input" type="number" value="10"/></label>
-            <label>Account ($) <input id="pt_cash" class="input" type="number" value="10000"/></label>
-          </div>
-          <div class="flex">
-            <button class="btn btn-primary" id="pt_buy">Buy @ Market</button>
-            <button class="btn btn-ghost" id="pt_sell">Sell @ Market</button>
-            <button class="btn btn-ghost" id="pt_flat">Close Position</button>
-          </div>
-          <p class="mono">Price: $<span id="pt_price">–</span> | Pos: <span id="pt_pos">0</span> sh | Avg: $<span id="pt_avg">0</span></p>
-          <p class="mono">Cash: $<span id="pt_cashVal">0</span> | UPL: <span id="pt_upl">0</span> | RPL: <span id="pt_rpl">0</span></p>
-          <small>Progress persists per user (cloud if logged in; otherwise local).</small>
-        </div>
+<section id="trade" class="section" data-page="/trade" data-auth="required">
+  <div class="container">
+    <div class="kicker">Candlestick Simulator + Paper Trading</div>
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Candlesticks</h3>
+        <div class="row"><label>Start Price <input id="cs_start" class="input" type="number" value="100"></label><label>Volatility (0.1–3) <input id="cs_vol" class="input" type="number" value="1.2" step="0.1"></label></div>
+        <div class="flex"><button class="btn btn-primary" id="cs_startBtn">Start</button><button class="btn btn-ghost" id="cs_stopBtn">Stop</button></div>
+        <canvas id="cs_chart" class="chart" width="800" height="280" aria-label="Candlestick chart"></canvas>
+      </div>
+      <div class="card span-6">
+        <h3>Paper Trading</h3>
+        <div class="row"><label>Qty <input id="pt_qty" class="input" type="number" value="10"></label><label>Account ($) <input id="pt_cash" class="input" type="number" value="10000"></label></div>
+        <div class="flex"><button class="btn btn-primary" id="pt_buy">Buy @ Market</button><button class="btn btn-ghost" id="pt_sell">Sell @ Market</button><button class="btn btn-ghost" id="pt_flat">Close Position</button></div>
+        <p class="mono">Price: $<span id="pt_price">–</span> | Pos: <span id="pt_pos">0</span> sh | Avg: $<span id="pt_avg">0</span></p>
+        <p class="mono">Cash: $<span id="pt_cashVal">0</span> | UPL: <span id="pt_upl">0</span> | RPL: <span id="pt_rpl">0</span></p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- OPTIONS LAB -->
-  <section id="options" class="section" data-page="/options">
-    <div class="container">
-      <div class="kicker">Options Payoff Lab</div>
-      <div class="grid">
-        <div class="card span-6">
-          <h3>Setup</h3>
-          <div class="row">
-            <label>Type
-              <select id="optType" class="input">
-                <option value="call">Long Call (debit)</option>
-                <option value="put">Long Put (debit)</option>
-                <option value="short_call">Short Call (credit)</option>
-                <option value="short_put">Short Put (credit)</option>
-                <option value="bull_call">Bull Call Spread</option>
-                <option value="bear_put">Bear Put Spread</option>
-              </select>
-            </label>
-            <label>Underlying Price <input id="uPrice" class="input" type="number" value="100"/></label>
-          </div>
-          <div class="row">
-            <label>Strike A <input id="k1" class="input" type="number" value="100"/></label>
-            <label>Strike B <input id="k2" class="input" type="number" value="110"/></label>
-          </div>
-          <div class="row">
-            <label>Premium A <input id="p1" class="input" type="number" value="3"/></label>
-            <label>Premium B <input id="p2" class="input" type="number" value="1"/></label>
-          </div>
-          <div class="row">
-            <label>Contracts <input id="contracts" class="input" type="number" value="1"/></label>
-            <label>Multiplier <input id="mult" class="input" type="number" value="100"/></label>
-          </div>
-          <div class="flex">
-            <button class="btn btn-primary" id="drawPayoff">Draw Payoff</button>
-            <small>Intrinsic payoff at expiration (no time value).</small>
-          </div>
-        </div>
-        <div class="card span-6">
-          <h3>Payoff</h3>
-          <canvas id="payoffChart" class="chart" width="800" height="280" aria-label="Payoff chart"></canvas>
-          <p class="mono">Max Profit: <span id="maxProfit">–</span> | Max Loss: <span id="maxLoss">–</span> | Breakeven(s): <span id="breakevens">–</span></p>
-        </div>
+<section id="options" class="section" data-page="/options" data-auth="required">
+  <div class="container">
+    <div class="kicker">Options Payoff Lab</div>
+    <div class="grid">
+      <div class="card span-6">
+        <h3>Setup</h3>
+        <div class="row"><label>Type
+          <select id="optType" class="input">
+            <option value="call">Long Call (debit)</option>
+            <option value="put">Long Put (debit)</option>
+            <option value="short_call">Short Call (credit)</option>
+            <option value="short_put">Short Put (credit)</option>
+            <option value="bull_call">Bull Call Spread</option>
+            <option value="bear_put">Bear Put Spread</option>
+          </select></label>
+          <label>Underlying Price <input id="uPrice" class="input" type="number" value="100"></label></div>
+        <div class="row"><label>Strike A <input id="k1" class="input" type="number" value="100"></label><label>Strike B <input id="k2" class="input" type="number" value="110"></label></div>
+        <div class="row"><label>Premium A <input id="p1" class="input" type="number" value="3"></label><label>Premium B <input id="p2" class="input" type="number" value="1"></label></div>
+        <div class="row"><label>Contracts <input id="contracts" class="input" type="number" value="1"></label><label>Multiplier <input id="mult" class="input" type="number" value="100"></label></div>
+        <div class="flex"><button class="btn btn-primary" id="drawPayoff">Draw Payoff</button><small>Intrinsic payoff at expiration (no time value).</small></div>
+      </div>
+      <div class="card span-6">
+        <h3>Payoff</h3>
+        <canvas id="payoffChart" class="chart" width="800" height="280" aria-label="Payoff chart"></canvas>
+        <p class="mono">Max Profit: <span id="maxProfit">–</span> | Max Loss: <span id="maxLoss">–</span> | Breakeven(s): <span id="breakevens">–</span></p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- QUIZ (30) -->
-  <section id="quiz" class="section" data-page="/quiz">
-    <div class="container">
-      <div class="kicker">30-Question Quiz</div>
-      <div class="card span-12">
-        <div id="quizBox"></div>
-        <div class="flex" style="margin-top:10px">
-          <button class="btn btn-primary" id="submitQuiz">Submit</button>
-          <button class="btn btn-ghost" id="resetQuiz">Reset</button>
-          <small id="quizResult" class="mono"></small>
-        </div>
-      </div>
-      <small>Score and answers are saved per user (cloud if logged in; otherwise local).</small>
-    </div>
-  </section>
+<section id="learn" class="section" data-page="/learn">
+  <div class="container">
+    <div class="kicker">Video Library</div>
+    <div id="videoGrid" class="grid"></div>
+  </div>
+</section>
 
-  <footer class="section" style="padding-top:20px">
-    <div class="container"><small>For education only. Not investment advice. © <span id="year"></span> Stockly.</small></div>
-  </footer>
+<footer class="section" style="padding-top:20px"><div class="container"><small>For education only. Not investment advice. © <span id="year"></span> Stockly.</small></div></footer>
 
-  <!-- Router + Videos + Candles + Paper + Options + Quiz -->
-  <script>
-    // Year
-    document.getElementById('year').textContent = new Date().getFullYear();
+<!-- Everything in one module (Firebase + app logic) -->
+<script type="module">
+/* Firebase SDKs */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, limit, getDocs, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-storage.js";
 
-    // Router
-    const routes={ "/":["home"], "/learn":["learn"], "/trade":["trade"], "/options":["options"], "/quiz":["quiz"], "/account":["account"] };
-    function setActiveLink(hash){ document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active')); const link=document.querySelector(`.nav-links a[data-route="${hash}"]`); if(link) link.classList.add('active'); }
-    function show(path){ document.querySelectorAll('[data-page]').forEach(sec=>{ const page=sec.getAttribute('data-page').replace('/',''); sec.classList.toggle('route-hidden', !(routes[path]||[]).includes(page)); }); setActiveLink("#"+path); window.scrollTo({top:0,behavior:'smooth'}); }
-    window.addEventListener('hashchange', ()=>{ const p=(location.hash||"#/").replace('#',''); show(p); });
-    document.querySelectorAll('[data-route]').forEach(a=>a.addEventListener('click', e=>{ e.preventDefault(); location.hash=a.getAttribute('data-route'); }));
-    if(!location.hash) location.hash="#/"; show(location.hash.replace('#',''));
+/* --- Your Firebase project (from console) --- */
+const firebaseConfig = {
+  apiKey: "AIzaSyCWQGLhMOcjkq2sL6gH3wMTvJx5_6uwSEA",
+  authDomain: "stockly-a46b2.firebaseapp.com",
+  projectId: "stockly-a46b2",
+  storageBucket: "stockly-a46b2.appspot.com",
+  messagingSenderId: "518502385497",
+  appId: "1:518502385497:web:485983ecaca0a978faae48"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-    // Videos
-    const videos=[
-      {title:"American Call Options — Khan Academy", id:"nnl3x1wo25g", source:"Khan Academy"},
-      {title:"American Put Options — Khan Academy", id:"6CUcgUeQS-w", source:"Khan Academy"},
-      {title:"VWAP Trading Strategy", id:"wVof35ErhEY", source:"TradeIQ"},
-      {title:"Candlestick Patterns Guide", id:"_I1omSmy44Q", source:"Rayner Teo"},
-      {title:"Covered Calls Explained", id:"wwceg3LYKuA", source:"Fidelity"},
-      {title:"Credit Spreads Explained", id:"GeNelEqIg8k", source:"Project Option"},
-      {title:"Iron Condor Strategy 101", id:"IPDJ4nDiDCo", source:"Project Option"}
-    ];
-    const vGrid=document.getElementById('videoGrid');
-    videos.forEach(v=>{
-      const card=document.createElement('article'); card.className="card span-6";
-      card.innerHTML = `<h3>${v.title}</h3>
-        <div class="chart" style="height:320px;display:grid;place-items:center;padding:0">
-          <iframe width="100%" height="100%" style="border:0;border-radius:12px" src="https://www.youtube-nocookie.com/embed/${v.id}" title="${v.title}" allowfullscreen></iframe>
-        </div>
-        <small class="muted">Source: ${v.source}</small>`;
-      vGrid.appendChild(card);
-    });
+/* ------------ Router + helpers ------------ */
+document.getElementById('year').textContent = new Date().getFullYear();
+const routes={ "/":["home"], "/dashboard":["dashboard"], "/course":["course"], "/community":["community"], "/trade":["trade"], "/options":["options"], "/learn":["learn"], "/account":["account"] };
+function setActiveLink(hash){ document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active')); const link=document.querySelector(`.nav-links a[data-route="${hash}"]`); if(link) link.classList.add('active'); }
+function toast(msg){ const wrap=document.getElementById('toasts'); const el=document.createElement('div'); el.className="toast"; el.textContent=msg; wrap.appendChild(el); setTimeout(()=>{ el.style.opacity='0'; setTimeout(()=>el.remove(),300); }, 2200); }
+function checkAuthFor(path){ const sec=document.querySelector(`[data-page="${path}"]`); if(!sec) return true; if(sec.hasAttribute('data-auth') && !window.__authed){ document.getElementById('authOverlay').style.display='flex'; return false; } return true; }
+function show(path){ const ok=checkAuthFor(path); const target=ok?path:"/"; document.querySelectorAll('[data-page]').forEach(sec=>{ const p=sec.getAttribute('data-page').replace('/',''); sec.style.display=(routes[target]||[]).includes(p)?'block':'none'; }); setActiveLink("#"+target); window.scrollTo({top:0,behavior:'smooth'}); if(target==="/community") loadFeed(); }
+window.addEventListener('hashchange', ()=>{ const p=(location.hash||"#/").replace('#',''); show(p); });
+document.querySelectorAll('[data-route]').forEach(a=>a.addEventListener('click', e=>{ e.preventDefault(); location.hash=a.getAttribute('data-route'); }));
+if(!location.hash) location.hash="#/"; show(location.hash.replace('#',''));
+document.getElementById('overlayDismiss').onclick=()=>{ document.getElementById('authOverlay').style.display='none'; };
 
-    // Candlestick simulator
-    const cctx = document.getElementById('cs_chart').getContext('2d');
-    let bars=[], csTimer=null;
-    function makeBar(prevClose, vol){
-      const open = prevClose;
-      const drift = (Math.random()-0.5) * vol;
-      const close = Math.max(0.01, +(open*(1 + drift/100)).toFixed(2));
-      const high = Math.max(open, close) * (1 + Math.random()*vol/200);
-      const low = Math.min(open, close) * (1 - Math.random()*vol/200);
-      return {o:open, h:+high.toFixed(2), l:+low.toFixed(2), c:close};
-    }
-    function drawCandles(){
-      const w=cctx.canvas.width, h=cctx.canvas.height;
-      cctx.clearRect(0,0,w,h); cctx.fillStyle="#0d0d0d"; cctx.fillRect(0,0,w,h);
-      if(bars.length<2) return;
-      const highs=bars.map(b=>b.h), lows=bars.map(b=>b.l);
-      let max=Math.max(...highs), min=Math.min(...lows);
-      const pad=(max-min)*0.1||1; max+=pad; min-=pad;
-      const n=bars.length, cw=(w-40)/n;
-      bars.forEach((b,i)=>{
-        const x=20 + i*cw + cw/2;
-        const y = v=> (h-20) - ((v-min)/(max-min))*(h-40);
-        // wick
-        cctx.strokeStyle="#999"; cctx.beginPath(); cctx.moveTo(x, y(b.h)); cctx.lineTo(x, y(b.l)); cctx.stroke();
-        // body
-        const up = b.c>=b.o;
-        cctx.fillStyle = up ? "#1ED760" : "#f05";
-        const top = y(up?b.c:b.o), bot = y(up?b.o:b.c);
-        const bw = Math.max(3, cw*0.6);
-        cctx.fillRect(x-bw/2, top, bw, Math.max(1, bot-top));
-      });
-      const last=bars[bars.length-1]; document.getElementById('pt_price').textContent = last.c.toFixed(2);
-      updatePaper(last.c);
-    }
-    function startCandles(){
-      if(csTimer) return;
-      const start=+document.getElementById('cs_start').value||100;
-      const vol=+document.getElementById('cs_vol').value||1;
-      if(bars.length===0) bars=[{o:start,h:start,l:start,c:start}];
-      csTimer=setInterval(()=>{
-        const prev=bars[bars.length-1]; const b=makeBar(prev.c,vol);
-        bars.push(b); if(bars.length>120) bars.shift(); drawCandles();
-      }, 1000);
-    }
-    function stopCandles(){ clearInterval(csTimer); csTimer=null; }
-    document.getElementById('cs_startBtn').onclick=startCandles;
-    document.getElementById('cs_stopBtn').onclick=stopCandles;
-
-    // Paper trading
-    const ptState = JSON.parse(localStorage.getItem('stockly_pt')||'{}');
-    if(ptState.cash==null) Object.assign(ptState,{cash:10000,pos:0,avg:0,rpl:0});
-    function savePT(){
-      localStorage.setItem('stockly_pt', JSON.stringify(ptState));
-    }
-    function updatePaper(price){
-      document.getElementById('pt_cashVal').textContent = ptState.cash.toFixed(2);
-      document.getElementById('pt_pos').textContent = ptState.pos;
-      document.getElementById('pt_avg').textContent = ptState.avg.toFixed(2);
-      const upl = (price - ptState.avg) * ptState.pos;
-      document.getElementById('pt_upl').textContent = "$"+upl.toFixed(2);
-      document.getElementById('pt_rpl').textContent = "$"+ptState.rpl.toFixed(2);
-    }
-    function ptBuy(){
-      const qty = Math.max(0, parseInt(document.getElementById('pt_qty').value||0));
-      const price = bars[bars.length-1]?.c || 100;
-      const cost = qty*price;
-      if(qty<=0 || cost>ptState.cash) return;
-      ptState.avg = (ptState.avg*ptState.pos + price*qty) / (ptState.pos + qty || 1);
-      ptState.pos += qty; ptState.cash -= cost; savePT(); updatePaper(price);
-    }
-    function ptSell(){
-      const qty = Math.max(0, parseInt(document.getElementById('pt_qty').value||0));
-      const price = bars[bars.length-1]?.c || 100;
-      const sellQty = Math.min(qty, ptState.pos);
-      if(sellQty<=0) return;
-      ptState.cash += sellQty*price;
-      ptState.pos -= sellQty;
-      ptState.rpl += (price - ptState.avg) * sellQty;
-      if(ptState.pos===0) ptState.avg=0;
-      savePT(); updatePaper(price);
-    }
-    function ptFlat(){
-      const price = bars[bars.length-1]?.c || 100;
-      ptState.cash += ptState.pos*price;
-      ptState.rpl += (price - ptState.avg) * ptState.pos;
-      ptState.pos=0; ptState.avg=0;
-      savePT(); updatePaper(price);
-    }
-    document.getElementById('pt_buy').onclick=ptBuy;
-    document.getElementById('pt_sell').onclick=ptSell;
-    document.getElementById('pt_flat').onclick=ptFlat;
-    document.getElementById('pt_cashVal').textContent=ptState.cash.toFixed(2);
-
-    // Options payoff
-    const pctx = document.getElementById('payoffChart').getContext('2d');
-    function payoffAt(S, type, K1,P1,K2,P2,contracts,mult){
-      const qty = contracts*mult;
-      switch(type){
-        case 'call': return Math.max(0, S-K1)*qty - P1*qty;
-        case 'put': return Math.max(0, K1-S)*qty - P1*qty;
-        case 'short_call': return (P1*qty) - Math.max(0, S-K1)*qty;
-        case 'short_put': return (P1*qty) - Math.max(0, K1-S)*qty;
-        case 'bull_call': return (Math.max(0,S-K1)-P1 - (Math.max(0,S-K2)-P2))*qty;
-        case 'bear_put': return (Math.max(0,K1-S)-P1 - (Math.max(0,K2-S)-P2))*qty;
-      }
-      return 0;
-    }
-    function drawPayoff(){
-      const type=document.getElementById('optType').value;
-      const U=+document.getElementById('uPrice').value;
-      const K1=+document.getElementById('k1').value, K2=+document.getElementById('k2').value;
-      const P1=+document.getElementById('p1').value, P2=+document.getElementById('p2').value;
-      const C=+document.getElementById('contracts').value, M=+document.getElementById('mult').value;
-      const Smin=Math.max(0, U*0.5), Smax=U*1.5;
-      const pts=[], steps=120;
-      for(let i=0;i<=steps;i++){ const S=Smin+(Smax-Smin)*i/steps; pts.push({S, y:payoffAt(S,type,K1,P1,K2,P2,C,M)}); }
-      const w=pctx.canvas.width, h=pctx.canvas.height;
-      pctx.clearRect(0,0,w,h);
-      pctx.fillStyle="#0d0d0d"; pctx.fillRect(0,0,w,h);
-      // axes
-      pctx.strokeStyle="#444"; pctx.lineWidth=1;
-      const zeroY = h/2;
-      pctx.beginPath(); pctx.moveTo(40, zeroY); pctx.lineTo(w-10, zeroY); pctx.stroke();
-      // line
-      const ymin=Math.min(...pts.map(p=>p.y)), ymax=Math.max(...pts.map(p=>p.y));
-      const pad=(ymax-ymin)||1; const y0=ymin - 0.1*pad; const y1=ymax + 0.1*pad;
-      pctx.strokeStyle="#1ED760"; pctx.lineWidth=2; pctx.beginPath();
-      pts.forEach((p,i)=>{
-        const x=40 + (i/steps)*(w-60);
-        const y = h-20 - ((p.y - y0)/(y1 - y0))*(h-40);
-        if(i===0) pctx.moveTo(x,y); else pctx.lineTo(x,y);
-      });
-      pctx.stroke();
-      document.getElementById('breakevens').textContent = (function(){
-        const arr=[]; for(let i=1;i<pts.length;i++){ if((pts[i-1].y<=0 && pts[i].y>=0)||(pts[i-1].y>=0 && pts[i].y<=0)){ arr.push(pts[i].S.toFixed(2)); } } return arr.join(", ")||"—";
-      })();
-      document.getElementById('maxProfit').textContent = "$"+ymax.toFixed(2);
-      document.getElementById('maxLoss').textContent = "$"+ymin.toFixed(2);
-    }
-    document.getElementById('drawPayoff').onclick=drawPayoff;
-    drawPayoff();
-
-    // Quiz (30)
-    const questions=[
-      {q:"What does the bid-ask spread represent?", a:["The day's high-low range","Difference between best buyer and seller prices","Brokerage commission"], correct:1, e:"Spread is ask minus bid—market liquidity/friction."},
-      {q:"A market order prioritizes:", a:["Price","Execution speed","Fees"], correct:1, e:"Market orders fill immediately at current prices."},
-      {q:"VWAP stands for:", a:["Volume Weighted Average Price","Variable Weighted Average Price","Volatility Weighted Average Price"], correct:0, e:"VWAP = Volume-Weighted Average Price."},
-      {q:"Which candle often signals bearish reversal at resistance?", a:["Hammer","Shooting Star","Bullish Engulfing"], correct:1, e:"Shooting star has long upper wick near resistance."},
-      {q:"Support is best described as:", a:["Area where demand may emerge","Guaranteed floor price","Moving average"], correct:0, e:"Support is a zone where buyers previously stepped in."},
-
-      {q:"Main goal of a stop-loss:", a:["Maximize profit","Limit downside risk","Increase position size"], correct:1, e:"Stops cap losses and enforce discipline."},
-      {q:"Risk/Reward 1:3 means:", a:["Risk 3 to make 1","Risk 1 to make 3","Break-even"], correct:1, e:"You risk 1 unit to target 3 units of profit."},
-      {q:"Common psychological trap after a loss:", a:["Revenge trading","Scaling out","Position sizing"], correct:0, e:"Revenge trading = impulsive attempts to win it back."},
-      {q:"Position sizing should consider:", a:["ATR/volatility & stop distance","Ticker logo","Number of news articles"], correct:0, e:"Use volatility and stop placement to size risk."},
-
-      {q:"A call option gives the holder:", a:["Obligation to sell shares","Right to buy shares","Right to short shares"], correct:1, e:"Calls = right (not obligation) to buy."},
-      {q:"A put option gives the holder:", a:["Right to sell shares","Obligation to sell shares","Right to buy shares"], correct:0, e:"Puts = right to sell at strike."},
-      {q:"Which is NOT in an option chain?", a:["Strike","Expiration","Coupon"], correct:2, e:"Options don’t have coupons—bonds do."},
-      {q:"Delta roughly measures:", a:["Time decay rate","Price sensitivity to underlying","Volatility of option"], correct:1, e:"Delta ≈ dPrice/dUnderlying."},
-      {q:"Theta represents:", a:["Sensitivity to volatility","Time decay","Gamma sensitivity"], correct:1, e:"Theta = decay of option value per day."},
-      {q:"Implied volatility (IV) is:", a:["Backward-looking","Market's forward view of variability","Risk-free rate"], correct:1, e:"IV reflects expected future volatility."},
-
-      {q:"IV crush typically happens:", a:["Before earnings","After known events like earnings","At market open daily"], correct:1, e:"Event passes → uncertainty drops → IV falls."},
-      {q:"Assignment risk exists when:", a:["Short options are ITM","Long options are OTM","Market is closed"], correct:0, e:"Short ITM options risk being assigned."},
-      {q:"Vega measures:", a:["Sensitivity to IV","Sensitivity to time","Sensitivity to interest rates"], correct:0, e:"Vega = change in option price per 1% IV change."},
-      {q:"Gamma is:", a:["Change in delta per $1 move","Change in theta per day","Change in vega per 1% IV"], correct:0, e:"Gamma accelerates delta."},
-
-      {q:"Covered call requires:", a:["Owning 100 shares per contract","Borrowing shares","Owning a put"], correct:0, e:"Covered = long stock + short call."},
-      {q:"Cash-secured put means:", a:["Selling a put with cash reserved to buy shares","Buying a put with margin","Shorting stock"], correct:0, e:"You reserve cash to be assigned on the put."},
-      {q:"Which is generally a credit trade?", a:["Bull call spread","Bear put spread","Iron condor"], correct:2, e:"Iron condor collects net credit."},
-      {q:"Bull call spread profits when:", a:["Price rises","Price falls","IV collapses on neutrality"], correct:0, e:"Directional up move with defined risk."},
-      {q:"Bear put spread is:", a:["Debit down bet","Credit down bet","Neutral bet"], correct:0, e:"Long put + short lower-strike put = debit."},
-
-      {q:"Straddle is:", a:["Same strike call+put","Different strike call+put","Two calls"], correct:0, e:"Same strike & expiry."},
-      {q:"Strangle is:", a:["Same strike call+put","Different strikes call+put","Calendar spread"], correct:1, e:"OTM strikes both sides."},
-      {q:"Iron condor risk is capped by:", a:["Short strikes only","Long wings (protective options)","Stop orders"], correct:1, e:"Long wings define max loss."},
-      {q:"Using a put as protection is called:", a:["Collar","Protective put","Synthetic long"], correct:1, e:"Protective put hedges downside."},
-      {q:"Portfolio Greeks help you:", a:["Ignore risk","Aggregate exposures across positions","Time travel"], correct:1, e:"Look at overall Delta/Theta/Vega/Gamma."},
-
-      {q:"Which statement about market orders is TRUE?", a:["No slippage ever","Can fill across multiple price levels","Always cheaper than limit"], correct:1, e:"In thin markets they may walk the book."},
-      {q:"A good trading journal should track:", a:["Entry, exit, setup, risk, emotions","Only P&L","Broker ads"], correct:0, e:"Quality notes drive learning & review."},
-      {q:"A large negative gamma position tends to:", a:["Gain from fast moves","Lose from fast moves","Unaffected by moves"], correct:1, e:"Short options (neg gamma) dislike volatility."}
-    ];
-    function renderQuiz(){
-      const box=document.getElementById('quizBox'); box.innerHTML="";
-      const saved = JSON.parse(localStorage.getItem('stockly_quiz_v1')||'{}');
-      questions.forEach((item,idx)=>{
-        const wrap=document.createElement('div'); wrap.className="card"; wrap.style.padding="12px"; wrap.style.margin="8px 0";
-        const title=document.createElement('div'); title.innerHTML=`<strong>Q${idx+1}.</strong> ${item.q}`; wrap.appendChild(title);
-        item.a.forEach((opt,i)=>{
-          const label=document.createElement('label'); label.style.display="block"; label.style.margin="6px 0";
-          label.innerHTML=`<input type="radio" name="q${idx}" value="${i}" ${saved["q"+idx]==i?"checked":""}/> ${opt}`;
-          wrap.appendChild(label);
-        });
-        if(saved["q"+idx]!=null){
-          const exp=document.createElement('div'); exp.className="muted"; exp.innerHTML=`Explanation: ${item.e}`; wrap.appendChild(exp);
-        }
-        box.appendChild(wrap);
-      });
-    }
-    function submitQuiz(){
-      const answers={}; let score=0;
-      questions.forEach((item,idx)=>{
-        const el=document.querySelector(`input[name="q${idx}"]:checked`);
-        const val=el?parseInt(el.value):-1; answers["q"+idx]=val;
-        if(val===item.correct) score++;
-      });
-      localStorage.setItem('stockly_quiz_v1', JSON.stringify(answers));
-      document.getElementById('quizResult').textContent=`Score: ${score}/${questions.length}`;
-      renderQuiz();
-    }
-    function resetQuiz(){ localStorage.removeItem('stockly_quiz_v1'); document.getElementById('quizResult').textContent=""; renderQuiz(); }
-    document.getElementById('submitQuiz').onclick=submitQuiz;
-    document.getElementById('resetQuiz').onclick=resetQuiz;
-    renderQuiz();
-  </script>
-
-  <!-- Firebase (your live config) + Auth + Firestore via CDN modules -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCWQGLhMOcjkq2sL6gH3wMTvJx5_6uwSEA",
-      authDomain: "stockly-a46b2.firebaseapp.com",
-      projectId: "stockly-a46b2",
-      storageBucket: "stockly-a46b2.appspot.com",
-      messagingSenderId: "518502385497",
-      appId: "1:518502385497:web:485983ecaca0a978faae48",
-      measurementId: "G-99JP69WZQC"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    console.log("✅ Firebase initialized");
-
-    const userInfoEl = document.getElementById("userInfo");
-    const suStatus = document.getElementById("suStatus");
-    const liStatus = document.getElementById("liStatus");
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userInfoEl && (userInfoEl.textContent = user.email);
-        document.getElementById('accountBtn').textContent = "Account ✓";
-        // Attempt to cloud-save local progress
-        try {
-          const localQuiz = JSON.parse(localStorage.getItem('stockly_quiz_v1')||'{}');
-          if(Object.keys(localQuiz).length) setDoc(doc(db, "users", user.uid, "quiz", "v1"), { answers: localQuiz, at: Date.now() }, { merge: true });
-          const localPT  = JSON.parse(localStorage.getItem('stockly_pt')||'{}');
-          if(Object.keys(localPT).length) setDoc(doc(db, "users", user.uid, "paper", "state"), localPT, { merge: true });
-        } catch(e) { console.warn("Cloud save skip:", e); }
-      } else {
-        userInfoEl && (userInfoEl.textContent = "none");
-        document.getElementById('accountBtn').textContent = "Account";
-      }
-    });
-
-    // Sign up
-    document.getElementById("signupBtn")?.addEventListener("click", async () => {
-      const email = document.getElementById("suEmail").value;
-      const pass  = document.getElementById("suPass").value;
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        suStatus && (suStatus.textContent = "Account created ✓");
-        alert("Account created: " + cred.user.email);
-      } catch (e) {
-        suStatus && (suStatus.textContent = e.message);
-        alert(e.message);
-      }
-    });
-
-    // Log in
-    document.getElementById("loginBtn")?.addEventListener("click", async () => {
-      const email = document.getElementById("liEmail").value;
-      const pass  = document.getElementById("liPass").value;
-      try {
-        const cred = await signInWithEmailAndPassword(auth, email, pass);
-        liStatus && (liStatus.textContent = "Logged in ✓");
-        alert("Logged in: " + cred.user.email);
-        // Save latest local quiz/paper to cloud
-        try {
-          const localQuiz = JSON.parse(localStorage.getItem('stockly_quiz_v1')||'{}');
-          if(Object.keys(localQuiz).length) setDoc(doc(db, "users", cred.user.uid, "quiz", "v1"), { answers: localQuiz, at: Date.now() }, { merge: true });
-          const localPT  = JSON.parse(localStorage.getItem('stockly_pt')||'{}');
-          if(Object.keys(localPT).length) setDoc(doc(db, "users", cred.user.uid, "paper", "state"), localPT, { merge: true });
-        } catch(e) { console.warn("Paper/quiz cloud save skip:", e); }
-      } catch (e) {
-        liStatus && (liStatus.textContent = e.message);
-        alert(e.message);
-      }
-    });
-
-    // Log out
-    document.getElementById("logoutBtn")?.addEventListener("click", async () => {
-      await signOut(auth);
-      alert("Logged out");
-    });
-
-    // Hook quiz submit to cloud save (if signed in)
-    const submitBtn = document.getElementById("submitQuiz");
-    submitBtn && submitBtn.addEventListener("click", async () => {
-      const user = auth.currentUser;
-      if(!user) return; // local already saved
-      try {
-        const localQuiz = JSON.parse(localStorage.getItem('stockly_quiz_v1')||'{}');
-        await setDoc(doc(db, "users", user.uid, "quiz", "v1"), { answers: localQuiz, at: Date.now() }, { merge: true });
-      } catch(e) { console.warn("Quiz cloud save error:", e); }
-    });
-
-    // Hook paper-trading actions to cloud save
-    ['pt_buy','pt_sell','pt_flat'].forEach(id => {
-      document.getElementById(id)?.addEventListener('click', async () => {
-        const user = auth.currentUser;
-        if(!user) return;
-        try {
-          const localPT  = JSON.parse(localStorage.getItem('stockly_pt')||'{}');
-          await setDoc(doc(db, "users", user.uid, "paper", "state"), localPT, { merge: true });
-        } catch(e) { console.warn("Paper cloud save error:", e); }
-      });
-    });
-  </script>
-</body>
-</html>
+/* ------------ Dashboard ------------ */
+const progress = JSON.parse(localStorage.getItem('stockly_progress')||'{}');
+if(progress.xp==null) Object.assign(progress,{xp:0,level:1,streak:0,lastDay:0,badges:[],activity:[]});
+function saveProgress(){ localStorage.setItem('stockly_progress', JSON.stringify(progress)); }
+function renderDashboard(){ const s=document.getElementById('streak'); if(!s) return; s.textContent=progress.streak; document.getElementById('xp').textContent=progress.xp; document.getElementById('level').textContent=progress.level; const b=document.getElementById('badges'); b.innerHTML=""; progress.badges.forEach(x=>{ const span=document.createElement('span'); span.className='pill'; span.textContent=x; b.appendChild(span); }); const ul=document.getElementById('activity'); ul.innerHTML=""; progress.activity.forEach(a=>{ const li=document.createElement('li'); li.textContent=new Date(a.t).toLocaleString()+" — "+a.label; ul.appendChild(li); }); }
+function addXP(n,label){ progress.xp+=n; progress.level=Math.floor(progress.xp/500)+1; if(label){ progress.activity.unshift({t:Date.now(),label:`+${n} XP — ${label}`}); if(progress.activity.length>20) progress.activity.pop(); } saveProgress(); renderDashboard(); toast(`+${n} XP — ${label||"Nice!"}`); }
+function bumpStreak(){ const today=Math.floor(Date.now()/(24*3600*1000)); if(progress.lastDay!==
