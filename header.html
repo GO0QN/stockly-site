@@ -1,0 +1,28 @@
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html"><span class="logo"></span><span>Stockly</span></a>
+    <nav class="navlinks">
+      <a href="index.html" data-nav="home">Home</a>
+      <a href="learn.html" data-nav="learn">Learn</a>
+      <a href="quiz.html" data-nav="quiz">Quiz</a>
+      <a href="trade.html" data-nav="trade">Paper Trade</a>
+      <a href="forums.html" data-nav="forums">Forums</a>
+    </nav>
+    <div class="user">
+      <button class="user-btn" data-el="userBtn">
+        <span data-el="userEmail">Guest</span> ▾
+      </button>
+      <div class="user-menu card" data-el="userMenu">
+        <a href="account.html">Profile / Account</a>
+        <button data-el="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+<script>
+  // mark active link
+  const p = location.pathname.split('/').pop() || 'index.html';
+  const map = { 'index.html':'home','learn.html':'learn','quiz.html':'quiz','trade.html':'trade','forums.html':'forums' };
+  const active = map[p] || 'home';
+  document.querySelectorAll(`[data-nav="${active}"]`).forEach(a=>a.classList.add('active'));
+</script>
