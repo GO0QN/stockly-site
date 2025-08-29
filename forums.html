@@ -5,8 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
 </head><body>
 
-<!-- Header -->
-<!-- paste header.html block with nav -->
+<!-- Header (same block you use on every page) -->
 <header class="site-header">
   <div class="container nav">
     <a class="brand" href="index.html"><span class="logo"></span><span>Stockly</span></a>
@@ -30,16 +29,145 @@
 
 <section class="section" data-requires-auth>
   <div class="container">
-    <div class="card">
-      <h2>Community Forums (shell)</h2>
-      <p class="muted">Account-gated. Next step: Firestore posts + comments + image uploads.</p>
-      <a class="btn btn-primary" href="account.html">Go to Account</a>
+    <div class="grid">
+      <!-- Create post -->
+      <div class="card span-4">
+        <h2>New Post</h2>
+        <label>Title<input id="pTitle" class="input" placeholder="My win / lesson / setup"></label>
+        <label>Text<textarea id="pBody" class="input" rows="5" placeholder="Tell the story, add details…"></textarea></label>
+        <label>Image URL (optional)<input id="pImg" class="input" placeholder="https://… (imgur, i.ibb.co, etc)"></label>
+        <button class="btn btn-primary" id="postBtn" style="margin-top:10px">Publish</button>
+        <small class="muted" id="postMsg"></small>
+      </div>
+
+      <!-- Feed -->
+      <div class="card span-8">
+        <h2>Community Feed</h2>
+        <div id="feed" class="grid"></div>
+      </div>
     </div>
   </div>
 </section>
 
 <footer><div class="container">© <span id="year"></span> Stockly</div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+
+<!-- Firestore logic -->
+<script type="module">
+  import "./firebase.js";
+  import {
+    getFirestore, collection, addDoc, serverTimestamp,
+    query, orderBy, onSnapshot, doc, updateDoc, increment,
+    setDoc, getDocs, limit
+  } from "https://www.gstatic.com/firebasejs/12.2.0/firebase-firestore.js";
+
+  const { auth, db } = window.__stockly;
+
+  // Create post
+  const postBtn = document.getElementById('postBtn');
+  const pTitle  = document.getElementById('pTitle');
+  const pBody   = document.getElementById('pBody');
+  const pImg    = document.getElementById('pImg');
+  const postMsg = document.getElementById('postMsg');
+
+  postBtn.onclick = async () => {
+    const u = auth.currentUser;
+    if (!u) return (postMsg.textContent = "Please log in first.");
+    if (!pTitle.value.trim() || !pBody.value.trim()) return (postMsg.textContent = "Title and text are required.");
+
+    try {
+      await addDoc(collection(db, "posts"), {
+        title: pTitle.value.trim(),
+        body:  pBody.value.trim(),
+        imageUrl: pImg.value.trim() || null,
+        authorUid: u.uid,
+        authorEmail: u.email,
+        likes: 0,
+        createdAt: serverTimestamp()
+      });
+      pTitle.value = ""; pBody.value = ""; pImg.value = "";
+      postMsg.textContent = "Posted ✓";
+      setTimeout(()=>postMsg.textContent="",1200);
+    } catch (e) {
+      postMsg.textContent = e.message;
+    }
+  };
+
+  // Render feed
+  const feed = document.getElementById('feed');
+  const q = query(collection(db, "posts"), orderBy("createdAt","desc"));
+  onSnapshot(q, (snap) => {
+    feed.innerHTML = "";
+    if (snap.empty) {
+      const card = document.createElement('div');
+      card.className="span-12";
+      card.innerHTML = `<small class="muted">No posts yet. Be the first to share!</small>`;
+      feed.appendChild(card);
+      return;
+    }
+    snap.forEach(docSnap => {
+      const p = docSnap.data(); p.id = docSnap.id;
+      const el = document.createElement('article');
+      el.className = "card span-12";
+      el.innerHTML = `
+        <h3>${escapeHtml(p.title || "")}</h3>
+        <small class="muted">${p.authorEmail || "anon"} • ${p.likes||0} likes</small>
+        <p style="margin-top:8px">${escapeHtml(p.body || "")}</p>
+        ${p.imageUrl ? `<img src="${p.imageUrl}" alt="" style="width:100%;max-height:420px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.08);margin:8px 0">` : ""}
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn btn-ghost" data-like="${p.id}">👍 Like</button>
+        </div>
+        <div style="margin-top:10px">
+          <input class="input" placeholder="Write a comment…" data-c-input="${p.id}">
+          <button class="btn btn-primary" data-c-send="${p.id}" style="margin-top:6px">Comment</button>
+          <div data-c-list="${p.id}" style="margin-top:10px"></div>
+        </div>
+      `;
+      feed.appendChild(el);
+    });
+  });
+
+  // Event delegation for like/comment
+  document.addEventListener('click', async (e) => {
+    // Like
+    const likeId = e.target.getAttribute?.('data-like');
+    if (likeId) {
+      await updateDoc(doc(db,"posts",likeId), { likes: increment(1) });
+    }
+    // Comment
+    const cSend = e.target.getAttribute?.('data-c-send');
+    if (cSend) {
+      const u = auth.currentUser; if(!u) return alert("Log in to comment.");
+      const input = document.querySelector(`[data-c-input="${cSend}"]`);
+      const text = (input?.value || "").trim(); if(!text) return;
+      await addDoc(collection(db,"posts",cSend,"comments"), {
+        text, authorUid:u.uid, authorEmail:u.email, createdAt: serverTimestamp()
+      });
+      input.value = "";
+      loadComments(cSend);
+    }
+  });
+
+  // Load comments for a single post
+  async function loadComments(postId){
+    const list = document.querySelector(`[data-c-list="${postId}"]`);
+    if(!list) return;
+    list.innerHTML = `<small class="muted">Loading…</small>`;
+    const qs = await getDocs(query(collection(db,"posts",postId,"comments"), orderBy("createdAt","asc"), limit(50)));
+    list.innerHTML = "";
+    qs.forEach(d=>{
+      const c = d.data();
+      const row = document.createElement('div');
+      row.className="card";
+      row.style.marginBottom = "6px";
+      row.innerHTML = `<small><b>${escapeHtml(c.authorEmail||"anon")}</b> — ${escapeHtml(c.text||"")}</small>`;
+      list.appendChild(row);
+    });
+  }
+
+  // Simple sanitizer for text
+  function escapeHtml(s){ return (s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) }
+</script>
 
 <script type="module" src="firebase.js"></script>
 </body></html>
